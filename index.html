@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stoklytics — ERP de Moda</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+
+  <!-- SheetJS (Excel export) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-container">
+      <div class="login-left">
+        <div class="login-brand">
+          <div class="login-logo">
+            <i class="fa-solid fa-tshirt"></i>
+            <span>Stoklytics</span>
+          </div>
+          <p class="login-tagline">ERP inteligente para lojas e marcas de moda</p>
+        </div>
+        <div class="login-illustration">
+          <i class="fa-solid fa-chart-line"></i>
+          <i class="fa-solid fa-box"></i>
+          <i class="fa-solid fa-credit-card"></i>
+        </div>
+        <div class="login-testimonial">
+          <p>"Gestão de estoque e vendas simplificada. Dados em tempo real para decisões mais inteligentes."</p>
+          <span class="login-testimonial-author">Stoklytics Fashion</span>
+        </div>
+      </div>
+      <div class="login-right">
+        <div class="login-form-wrapper">
+          <div class="login-form-header">
+            <h1>Acessar o sistema</h1>
+            <p>Digite suas credenciais para entrar</p>
+          </div>
+          <form class="login-form" id="loginForm" autocomplete="off">
+            <div class="login-field">
+              <label for="loginEmail">E-mail</label>
+              <div class="login-input-wrapper">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="loginEmail" placeholder="seu@email.com" />
+              </div>
+            </div>
+            <div class="login-field">
+              <label for="loginPassword">Senha</label>
+              <div class="login-input-wrapper">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="••••••••" />
+                <button type="button" class="login-pw-toggle" id="pwToggle" aria-label="Mostrar senha">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+                        <button type="submit" class="login-btn" id="loginBtn">
+              <span>Entrar</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+          <div class="login-error" id="loginError">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="loginErrorText">Credenciais inválidas</span>
+          </div>
+                  </div>
+      </div>
+    </div>
+    <div class="login-particles" id="loginParticles"></div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ===== APP WRAPPER ===== -->
+  <div class="app-wrapper" id="appWrapper" style="display:none;">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fa-solid fa-tshirt"></i>
+        <span class="logo-text">Stoklytics</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Recolher sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="#" class="nav-link active" data-section="overview" data-tooltip="Visão Geral">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Visão Geral</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="inventory" data-tooltip="Estoque">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Estoque</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="sales" data-tooltip="Vendas">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Vendas</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="pos" data-tooltip="PDV">
+            <i class="fa-solid fa-cash-register"></i>
+            <span>PDV</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="cashflow" data-tooltip="Fluxo de Caixa">
+            <i class="fa-solid fa-money-bill-trend-up"></i>
+            <span>Fluxo de Caixa</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="customers" data-tooltip="Clientes">
+            <i class="fa-solid fa-users"></i>
+            <span>Clientes</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="categories" data-tooltip="Categorias">
+            <i class="fa-solid fa-tags"></i>
+            <span>Categorias</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="sellers" data-tooltip="Vendedores">
+            <i class="fa-solid fa-user-tie"></i>
+            <span>Vendedores</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="reports" data-tooltip="Relatórios">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Relatórios</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="settings" data-tooltip="Configurações">
+            <i class="fa-solid fa-gear"></i>
+            <span>Configurações</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info-mini">
+        <div class="user-avatar-mini">VM</div>
+        <div class="user-details-mini">
+          <span class="user-name">Vitor Marques</span>
+          <span class="user-role">Admin</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-content" id="mainContent">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+        <div class="search-wrapper">
+          <i class="fa-solid fa-search search-icon"></i>
+          <input type="text" class="search-input" id="globalSearch" placeholder="Buscar produtos, sku, categoria..." />
+          <kbd class="search-kbd">Ctrl+K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-indicators">
+          <div class="status-item sync-status">
+            <i class="fa-solid fa-cloud"></i>
+            <span>Sincronizado</span>
+          </div>
+          <div class="status-item">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge-dot"></span>
+          </div>
+        </div>
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">VM</div>
+          <div class="user-info">
+            <span class="user-name-top">Vitor Marques</span>
+            <span class="user-role-top">Administrador</span>
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+          <!-- Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar">VM</div>
+              <div>
+                <div class="dropdown-name">Vitor Marques</div>
+                <div class="dropdown-email">admin@stoklytics.com.br</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" data-section="settings">
+              <i class="fa-solid fa-gear"></i> Configurações
+            </a>
+            <a href="#" class="dropdown-item" id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== SECTION: OVERVIEW ===== -->
+    <section class="dashboard-section active" id="section-overview">
+      <div class="section-header">
+        <div>
+          <h1>Visão Geral</h1>
+          <p class="section-subtitle">Resumo operacional do seu estoque e vendas</p>
+        </div>
+        <div class="header-actions">
+          <span class="date-badge"><i class="fa-regular fa-calendar"></i> Julho 2026</span>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon stock-icon"><i class="fa-solid fa-box"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Total em Estoque</span>
+            <span class="kpi-value" id="kpiTotalStock">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+12.5%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon revenue-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Faturamento Mensal</span>
+            <span class="kpi-value" id="kpiRevenue">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+8.2%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon sold-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Peças Vendidas</span>
+            <span class="kpi-value" id="kpiSold">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+5.7%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Alertas de Estoque</span>
+            <span class="kpi-value" id="kpiAlerts">0</span>
+          </div>
+          <div class="kpi-change negative"><i class="fa-solid fa-arrow-up"></i><span>+3.1%</span></div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3>Vendas Mensais</h3>
+            <div class="chart-period">
+              <span class="period-btn active">6M</span>
+              <span class="period-btn">12M</span>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3>Distribuição por Categoria</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-section">
+        <div class="recent-header">
+          <h3>Movimentações Recentes</h3>
+          <a href="#" class="view-all" data-section="reports">Ver todas <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="recent-list" id="recentList"></div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: INVENTORY ===== -->
+    <section class="dashboard-section" id="section-inventory">
+      <div class="section-header">
+        <div>
+          <h1>Gestão de Estoque</h1>
+          <p class="section-subtitle">Gerencie todos os produtos do seu catálogo</p>
+        </div>
+        <button class="btn btn-primary" id="openModalBtn">
+          <i class="fa-solid fa-plus"></i> Cadastrar Novo Produto
+        </button>
+      </div>
+
+      <div class="inventory-toolbar">
+        <div class="toolbar-left">
+          <div class="search-wrapper small">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" class="search-input" id="inventorySearch" placeholder="Buscar na tabela..." />
+          </div>
+          <div class="filter-group">
+            <select id="categoryFilter" class="filter-select">
+              <option value="all">Todas as Categorias</option>
+              <option value="Camisetas">Camisetas</option>
+              <option value="Calças">Calças</option>
+              <option value="Vestidos">Vestidos</option>
+              <option value="Calçados">Calçados</option>
+              <option value="Jaquetas">Jaquetas</option>
+              <option value="Acessórios">Acessórios</option>
+            </select>
+            <select id="statusFilter" class="filter-select">
+              <option value="all">Todos os Status</option>
+              <option value="in-stock">Em Estoque</option>
+              <option value="low-stock">Estoque Baixo</option>
+              <option value="out-of-stock">Esgotado</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <span class="table-count" id="tableCount">0 produtos</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="inventory-table" id="inventoryTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="sku">SKU <i class="fa-solid fa-sort"></i></th>
+              <th>Produto</th>
+              <th class="sortable" data-sort="category">Categoria <i class="fa-solid fa-sort"></i></th>
+              <th>Grade</th>
+              <th class="sortable text-right" data-sort="quantity">Qtd <i class="fa-solid fa-sort"></i></th>
+              <th class="sortable text-right" data-sort="costPrice">Custo <i class="fa-solid fa-sort"></i></th>
+              <th class="sortable text-right" data-sort="salePrice">Venda <i class="fa-solid fa-sort"></i></th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: SALES ===== -->
+    <section class="dashboard-section" id="section-sales">
+      <div class="section-header">
+        <div>
+          <h1>Vendas</h1>
+          <p class="section-subtitle">Histórico completo de pedidos e vendas realizadas</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="exportSalesBtn">
+            <i class="fa-solid fa-download"></i> Exportar
+          </button>
+          <span class="date-badge"><i class="fa-regular fa-calendar"></i> Julho 2026</span>
+        </div>
+      </div>
+
+      <!-- Sales KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon revenue-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Total de Pedidos</span>
+            <span class="kpi-value" id="kpiTotalOrders">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+15.3%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon stock-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Ticket Médio</span>
+            <span class="kpi-value" id="kpiAvgTicket">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+6.8%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon sold-icon"><i class="fa-solid fa-credit-card"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Vendas no Pix</span>
+            <span class="kpi-value" id="kpiPixSales">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+22.1%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon alert-icon"><i class="fa-solid fa-receipt"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Cancelamentos</span>
+            <span class="kpi-value" id="kpiCancellations">0</span>
+          </div>
+          <div class="kpi-change negative"><i class="fa-solid fa-arrow-down"></i><span>-2.4%</span></div>
+        </div>
+      </div>
+
+      <!-- Sales table -->
+      <div class="inventory-toolbar">
+        <div class="toolbar-left">
+          <div class="search-wrapper small">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" class="search-input" id="salesSearch" placeholder="Buscar pedido..." />
+          </div>
+          <div class="filter-group">
+            <select id="paymentFilter" class="filter-select">
+              <option value="all">Todos os Pagamentos</option>
+              <option value="Pix">Pix</option>
+              <option value="Cartão de Crédito">Cartão de Crédito</option>
+              <option value="Cartão de Débito">Cartão de Débito</option>
+              <option value="Boleto">Boleto</option>
+            </select>
+            <select id="salesStatusFilter" class="filter-select">
+              <option value="all">Todos os Status</option>
+              <option value="Concluído">Concluído</option>
+              <option value="Cancelado">Cancelado</option>
+              <option value="Pendente">Pendente</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <span class="table-count" id="salesCount">0 pedidos</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="inventory-table" id="salesTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="order">Pedido <i class="fa-solid fa-sort"></i></th>
+              <th>Data</th>
+              <th class="sortable" data-sort="seller">Vendedor <i class="fa-solid fa-sort"></i></th>
+              <th>Itens</th>
+              <th class="sortable text-right" data-sort="total">Valor Total <i class="fa-solid fa-sort"></i></th>
+              <th>Pagamento</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="salesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: PDV ===== -->
+    <section class="dashboard-section" id="section-pos">
+      <div class="section-header">
+        <div>
+          <h1>PDV — Balcão de Vendas</h1>
+          <p class="section-subtitle">Registre vendas e dê baixa no estoque em tempo real</p>
+        </div>
+        <div class="header-actions">
+          <span class="date-badge"><i class="fa-regular fa-clock"></i> <span id="posTime">00:00</span></span>
+        </div>
+      </div>
+
+      <div class="pos-layout">
+        <!-- Left: Product grid -->
+        <div class="pos-products">
+          <div class="pos-barcode-hint">
+            <i class="fa-solid fa-barcode"></i>
+            <span>Escaneie o código de barras do produto ou busque manualmente</span>
+          </div>
+          <div class="pos-toolbar">
+            <div class="pos-search">
+              <i class="fa-solid fa-search"></i>
+              <input type="text" id="posSearch" placeholder="Buscar produto por nome ou SKU..." />
+            </div>
+            <div class="pos-filter">
+              <select id="posCategoryFilter">
+                <option value="">Todas as categorias</option>
+              </select>
+            </div>
+          </div>
+          <div class="pos-product-grid" id="posProductGrid">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right: Cart -->
+        <div class="pos-cart">
+          <div class="pos-cart-header">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>Carrinho</span>
+            <span class="pos-cart-count" id="cartCount">0</span>
+          </div>
+          <div class="pos-cart-body" id="cartBody">
+            <div class="pos-cart-empty">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <p>Carrinho vazio</p>
+              <span>Clique nos produtos ao lado para adicionar</span>
+            </div>
+          </div>
+          <div class="pos-cart-footer">
+            <div class="pos-cart-summary">
+              <div class="pos-cart-row">
+                <span>Itens</span>
+                <span id="cartItemsCount">0</span>
+              </div>
+              <div class="pos-cart-row">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">R$ 0,00</span>
+              </div>
+              <div class="pos-cart-row pos-cart-total">
+                <span>Total</span>
+                <span id="cartTotal">R$ 0,00</span>
+              </div>
+            </div>
+            <div class="pos-coupon-row">
+              <div class="pos-coupon-header">
+                <i class="fa-solid fa-tag"></i>
+                <span>Cupons de desconto</span>
+              </div>
+              <div id="couponSelectContainer" class="pos-coupon-grid"></div>
+              <div id="appliedCouponsContainer" class="pos-coupons-applied"></div>
+            </div>
+            <div class="pos-cart-actions">
+              <button class="btn btn-secondary btn-sm" id="clearCartBtn" disabled><i class="fa-solid fa-trash-can"></i> Limpar</button>
+              <button class="btn btn-primary" id="checkoutBtn" disabled>
+                <i class="fa-solid fa-check"></i> Finalizar Venda
+              </button>
+            </div>
+            <div class="pos-payment-row">
+              <select id="posPaymentMethod">
+                <option value="Pix">Pix</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Boleto">Boleto</option>
+              </select>
+            </div>
+            <div class="pos-payment-row">
+              <select id="posCustomerSelect">
+                <option value="">Cliente: Balcão (sem identificação)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: CASH FLOW ===== -->
+    <section class="dashboard-section" id="section-cashflow">
+      <div class="section-header">
+        <div>
+          <h1>Fluxo de Caixa</h1>
+          <p class="section-subtitle">Acompanhe entradas, saídas e saldo financeiro</p>
+        </div>
+        <button class="btn btn-primary" id="addTransactionBtn">
+          <i class="fa-solid fa-plus"></i> Nova Transação
+        </button>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon stock-icon"><i class="fa-solid fa-coins"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Saldo do Dia</span>
+            <span class="kpi-value" id="cfDayBalance">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-scale-balanced"></i><span>Atual</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon revenue-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Entradas (Hoje)</span>
+            <span class="kpi-value" id="cfInflows">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>Receitas</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon alert-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Saídas (Hoje)</span>
+            <span class="kpi-value" id="cfOutflows">R$ 0</span>
+          </div>
+          <div class="kpi-change negative"><i class="fa-solid fa-arrow-down"></i><span>Despesas</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon sold-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Saldo Projetado 7d</span>
+            <span class="kpi-value" id="cfProjected">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-calendar"></i><span>Próximos 7 dias</span></div>
+        </div>
+      </div>
+      <div class="inventory-toolbar">
+        <div class="toolbar-left">
+          <div class="search-wrapper small">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" class="search-input" id="cfSearch" placeholder="Buscar transação..." />
+          </div>
+          <div class="filter-group">
+            <select id="cfTypeFilter" class="filter-select">
+              <option value="all">Todos os Tipos</option>
+              <option value="entrada">Entrada</option>
+              <option value="saida">Saída</option>
+            </select>
+            <select id="cfCategoryFilter" class="filter-select">
+              <option value="all">Todas as Categorias</option>
+              <option value="Vendas">Vendas</option>
+              <option value="Fornecedores">Fornecedores</option>
+              <option value="Aluguel">Aluguel</option>
+              <option value="Folha">Folha</option>
+              <option value="Impostos">Impostos</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <span class="table-count" id="cfCount">0 transações</span>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="inventory-table" id="cfTable">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th class="text-right">Valor</th>
+              <th>Categoria</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="cfBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: CUSTOMERS ===== -->
+    <section class="dashboard-section" id="section-customers">
+      <div class="section-header">
+        <div>
+          <h1>Clientes</h1>
+          <p class="section-subtitle">Gerencie sua base de clientes e acompanhe o relacionamento</p>
+        </div>
+        <button class="btn btn-primary" id="addCustomerBtn">
+          <i class="fa-solid fa-plus"></i> Novo Cliente
+        </button>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon stock-icon"><i class="fa-solid fa-user-group"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Total de Clientes</span>
+            <span class="kpi-value" id="kpiTotalCustomers">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>Cadastrados</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon revenue-icon"><i class="fa-solid fa-user-check"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Ativos</span>
+            <span class="kpi-value" id="kpiActiveCustomers">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>Com compras</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon sold-icon"><i class="fa-solid fa-wallet"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Ticket Médio</span>
+            <span class="kpi-value" id="kpiCustomerAvgTicket">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>Médio</span></div>
+        </div>
+      </div>
+      <div class="customers-grid" id="customersGrid"></div>
+    </section>
+
+    <!-- ===== SECTION: CATEGORIES ===== -->
+    <section class="dashboard-section" id="section-categories">
+      <div class="section-header">
+        <div>
+          <h1>Categorias</h1>
+          <p class="section-subtitle">Gerencie as categorias de produtos do seu catálogo</p>
+        </div>
+        <button class="btn btn-primary" id="addCategoryBtn">
+          <i class="fa-solid fa-plus"></i> Criar Nova Categoria
+        </button>
+      </div>
+
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- ===== SECTION: SELLERS ===== -->
+    <section class="dashboard-section" id="section-sellers">
+      <div class="section-header">
+        <div>
+          <h1>Vendedores</h1>
+          <p class="section-subtitle">Ranking de desempenho da equipe comercial</p>
+        </div>
+        <div class="header-actions">
+          <span class="date-badge"><i class="fa-regular fa-calendar"></i> Julho 2026</span>
+        </div>
+      </div>
+
+      <!-- Seller KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon stock-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Vendedores Ativos</span>
+            <span class="kpi-value" id="kpiActiveSellers">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+1</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon revenue-icon"><i class="fa-solid fa-trophy"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Meta do Time</span>
+            <span class="kpi-value" id="kpiTeamGoal">R$ 0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>72%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon sold-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Total de Vendas</span>
+            <span class="kpi-value" id="kpiTeamSales">0</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-arrow-up"></i><span>+15.3%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon alert-icon"><i class="fa-solid fa-medal"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Melhor Vendedor</span>
+            <span class="kpi-value" id="kpiBestSeller" style="font-size:1.1rem;">—</span>
+          </div>
+          <div class="kpi-change positive"><i class="fa-solid fa-crown"></i><span>Destaque</span></div>
+        </div>
+      </div>
+
+      <!-- Seller Goals -->
+      <div class="seller-goals-panel" id="sellerGoalsPanel">
+        <div class="seller-goals-header">
+          <h3><i class="fa-solid fa-bullseye"></i> Metas Individuais</h3>
+          <span class="goals-subtitle">Meta mensal padrão: <strong id="defaultGoalDisplay">R$ 15.000,00</strong></span>
+        </div>
+        <div class="seller-goals-grid" id="sellerGoalsGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Seller Ranking -->
+      <div class="seller-ranking-wrapper">
+        <div class="seller-podium" id="sellerPodium">
+          <!-- populated by JS -->
+        </div>
+        <div class="table-wrapper">
+          <table class="inventory-table" id="sellerTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Vendedor</th>
+                <th>Vendas Realizadas</th>
+                <th class="text-right">Valor Vendido</th>
+                <th class="text-right">Ticket Médio</th>
+                <th class="text-right">Itens Vendidos</th>
+                <th>Método Preferido</th>
+                <th>Performance</th>
+              </tr>
+            </thead>
+            <tbody id="sellerBody">
+              <!-- populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: REPORTS ===== -->
+    <section class="dashboard-section" id="section-reports">
+      <div class="section-header">
+        <div>
+          <h1>Relatórios</h1>
+          <p class="section-subtitle">Análises, rankings e previsões inteligentes do seu negócio</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="reportsExportBtn">
+            <i class="fa-solid fa-download"></i> Exportar PDF
+          </button>
+          <span class="date-badge"><i class="fa-regular fa-calendar"></i> Atualizado em 27/07/2026</span>
+        </div>
+      </div>
+
+      <div class="reports-grid">
+        <!-- Top Sellers -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon top-sellers">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div>
+              <h3>Produtos Mais Vendidos</h3>
+              <p class="report-subtitle">Ranking dos campeões de venda do mês</p>
+            </div>
+          </div>
+          <div class="report-card-body">
+            <ol class="ranking-list" id="topSellersList">
+              <!-- populated by JS -->
+            </ol>
+          </div>
+        </div>
+
+        <!-- Slow Movers -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon slow-movers">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <h3>Produtos Parados no Estoque</h3>
+              <p class="report-subtitle">Itens com baixa rotatividade</p>
+            </div>
+          </div>
+          <div class="report-card-body">
+            <ol class="ranking-list" id="slowMoversList">
+              <!-- populated by JS -->
+            </ol>
+          </div>
+        </div>
+
+        <!-- AI Forecast -->
+        <div class="report-card forecast-card">
+          <div class="report-card-header">
+            <div class="report-card-icon forecast">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+              <h3>Previsão de Faturamento</h3>
+              <p class="report-subtitle">Estimativa inteligente para o próximo mês</p>
+            </div>
+            <span class="forecast-badge">IA</span>
+          </div>
+          <div class="report-card-body">
+            <div class="forecast-value" id="forecastValue">R$ 0</div>
+            <div class="forecast-range">
+              <span>Mín: <strong id="forecastMin">R$ 0</strong></span>
+              <span>Máx: <strong id="forecastMax">R$ 0</strong></span>
+            </div>
+            <div class="forecast-bar">
+              <div class="forecast-bar-fill" id="forecastBarFill" style="width: 72%;"></div>
+            </div>
+            <div class="forecast-footer">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Baseado no histórico dos últimos 6 meses e tendências sazonais</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Summary -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon summary">
+              <i class="fa-solid fa-chart-simple"></i>
+            </div>
+            <div>
+              <h3>Resumo do Período</h3>
+              <p class="report-subtitle">Indicadores consolidados do mês</p>
+            </div>
+          </div>
+          <div class="report-card-body">
+            <div class="summary-grid" id="summaryGrid">
+              <!-- populated by JS with real data -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Performance -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon" style="background:rgba(234,179,8,0.12);color:var(--yellow);">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <div>
+              <h3>Performance por Categoria</h3>
+              <p class="report-subtitle">Receita gerada por categoria de produto</p>
+            </div>
+          </div>
+          <div class="report-card-body" id="categoryPerformanceBody">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon" style="background:rgba(16,185,129,0.12);color:var(--green);">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <div>
+              <h3>Formas de Pagamento</h3>
+              <p class="report-subtitle">Distribuição por método de pagamento</p>
+            </div>
+          </div>
+          <div class="report-card-body" id="paymentMethodsBody">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- Inventory Overview -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon" style="background:rgba(139,92,246,0.12);color:var(--violet);">
+              <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <div>
+              <h3>Visão Geral do Estoque</h3>
+              <p class="report-subtitle">Valores, quantidades e indicadores</p>
+            </div>
+          </div>
+          <div class="report-card-body">
+            <div class="summary-grid" id="inventorySummaryGrid">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Promotions -->
+        <div class="report-card ai-promo-card">
+          <div class="report-card-header">
+            <div class="report-card-icon ai-promo">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h3>Promoções Inteligentes</h3>
+              <p class="report-subtitle">Sugestões de IA para girar produtos parados no estoque</p>
+            </div>
+            <span class="forecast-badge">IA</span>
+            <button class="btn btn-primary btn-sm" id="refreshPromoBtn">
+              <i class="fa-solid fa-rotate"></i> Gerar Novas Ideias
+            </button>
+          </div>
+          <div class="report-card-body">
+            <div class="ai-promo-grid" id="aiPromoGrid">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Restock Forecast -->
+        <div class="report-card">
+          <div class="report-card-header">
+            <div class="report-card-icon" style="background:rgba(34,197,94,0.12);color:var(--green);">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div>
+              <h3>Previsão de Reposição</h3>
+              <p class="report-subtitle">Produtos que precisam de reabastecimento</p>
+            </div>
+            <span class="forecast-badge" style="background:var(--green);">Estoque</span>
+          </div>
+          <div class="report-card-body">
+            <div class="restock-list" id="restockList">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: SETTINGS ===== -->
+    <section class="dashboard-section" id="section-settings">
+      <div class="section-header">
+        <div>
+          <h1>Configurações</h1>
+          <p class="section-subtitle">Gerencie sua loja, equipe e integrações do sistema</p>
+        </div>
+      </div>
+
+      <!-- Settings Tabs -->
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="store">
+          <i class="fa-solid fa-store"></i> Perfil da Loja
+        </button>
+        <button class="settings-tab" data-tab="account">
+          <i class="fa-solid fa-user-gear"></i> Minha Conta
+        </button>
+        <button class="settings-tab" data-tab="users">
+          <i class="fa-solid fa-users"></i> Usuários
+        </button>
+        <button class="settings-tab" data-tab="coupons">
+          <i class="fa-solid fa-tag"></i> Cupons
+        </button>
+        <button class="settings-tab" data-tab="integrations">
+          <i class="fa-solid fa-plug"></i> Integrações
+        </button>
+      </div>
+
+      <!-- Tab: Store Profile -->
+      <div class="settings-panel active" id="settings-store">
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <h3>Informações da Loja</h3>
+            <span class="settings-badge">Ativo</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Razão Social</label>
+                <div class="settings-field">Stoklytics Fashion Ltda.</div>
+              </div>
+              <div class="form-group">
+                <label>CNPJ</label>
+                <div class="settings-field">45.321.987/0001-00</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="storeName">Nome Fantasia</label>
+                <input type="text" id="storeName" class="settings-input" value="Stoklytics" />
+              </div>
+              <div class="form-group">
+                <label for="storeColor">Cor Primária</label>
+                <div class="settings-color-wrapper">
+                  <input type="color" id="storeColor" value="#6366F1" />
+                  <span id="storeColorHex">#6366F1</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="storeLogo">URL do Logo</label>
+                <input type="text" id="storeLogo" class="settings-input" placeholder="https://exemplo.com/logo.png" />
+              </div>
+            </div>
+            <div class="form-row" style="margin-top: 8px;">
+              <div class="form-group full-width">
+                <button class="btn btn-primary" id="saveStoreSettings">
+                  <i class="fa-solid fa-check"></i> Salvar Alterações
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: My Account -->
+      <div class="settings-panel" id="settings-account">
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <h3>Minha Conta</h3>
+            <span class="settings-badge" id="accountRoleBadge">Administrador</span>
+          </div>
+          <div class="settings-card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nome</label>
+                <div class="settings-field" id="accountName">—</div>
+              </div>
+              <div class="form-group">
+                <label>E-mail</label>
+                <div class="settings-field" id="accountEmail">—</div>
+              </div>
+            </div>
+            <hr class="settings-divider" />
+            <h4 style="margin: 0 0 16px 0; font-size: 14px; color: var(--text-secondary);">Alterar Senha</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="accountCurrentPassword">Senha Atual</label>
+                <input type="password" id="accountCurrentPassword" class="settings-input" placeholder="Digite sua senha atual" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="accountNewPassword">Nova Senha</label>
+                <input type="password" id="accountNewPassword" class="settings-input" placeholder="Nova senha (mín. 4 caracteres)" />
+              </div>
+              <div class="form-group">
+                <label for="accountConfirmPassword">Confirmar Nova Senha</label>
+                <input type="password" id="accountConfirmPassword" class="settings-input" placeholder="Confirme a nova senha" />
+              </div>
+            </div>
+            <div class="form-row" style="margin-top: 8px;">
+              <div class="form-group full-width">
+                <button class="btn btn-primary" id="saveAccountPassword">
+                  <i class="fa-solid fa-check"></i> Alterar Senha
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Users -->
+      <div class="settings-panel" id="settings-users">
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <h3>Equipe</h3>
+            <button class="btn btn-primary btn-sm" id="addUserBtn"><i class="fa-solid fa-plus"></i> Criar Usuário</button>
+          </div>
+          <div class="settings-card-body">
+            <div class="users-list" id="usersList">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Coupons -->
+      <div class="settings-panel" id="settings-coupons">
+        <div class="settings-card">
+          <div class="settings-card-header">
+            <h3>Cupons de Desconto</h3>
+            <button class="btn btn-primary btn-sm" id="addCouponBtn"><i class="fa-solid fa-plus"></i> Novo Cupom</button>
+          </div>
+          <div class="settings-card-body">
+            <div class="coupons-list" id="couponsList">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Integrations -->
+      <div class="settings-panel" id="settings-integrations">
+        <div class="integration-grid">
+          <div class="integration-card">
+            <div class="integration-icon" style="background: rgba(99, 102, 241, 0.12); color: var(--accent);">
+              <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div class="integration-info">
+              <h4>Nota Fiscal Eletrônica</h4>
+              <p>NF-e / NFC-e integrada à SEFAZ</p>
+            </div>
+            <span class="integration-status active">
+              <span class="dot"></span> Conectado
+            </span>
+          </div>
+          <div class="integration-card">
+            <div class="integration-icon" style="background: rgba(34, 197, 94, 0.12); color: var(--green);">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <div class="integration-info">
+              <h4>Maquininha de Cartão</h4>
+              <p>Rede — Stone Pagamentos</p>
+            </div>
+            <span class="integration-status active">
+              <span class="dot"></span> Conectado
+            </span>
+          </div>
+          <div class="integration-card">
+            <div class="integration-icon" style="background: rgba(6, 182, 212, 0.12); color: var(--cyan);">
+              <i class="fa-solid fa-truck"></i>
+            </div>
+            <div class="integration-info">
+              <h4>Logística e Frete</h4>
+              <p>Melhor Envio — Correios & Jadlog</p>
+            </div>
+            <span class="integration-status active">
+              <span class="dot"></span> Conectado
+            </span>
+          </div>
+          <div class="integration-card">
+            <div class="integration-icon" style="background: rgba(234, 179, 8, 0.12); color: var(--yellow);">
+              <i class="fa-solid fa-chart-bar"></i>
+            </div>
+            <div class="integration-info">
+              <h4>Google Analytics 4</h4>
+              <p>Dashboard de tráfego e conversão</p>
+            </div>
+            <span class="integration-status inactive">
+              <span class="dot"></span> Desconectado
+            </span>
+          </div>
+          <div class="integration-card">
+            <div class="integration-icon" style="background: rgba(139, 92, 246, 0.12); color: var(--violet);">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="integration-info">
+              <h4>E-mail Marketing</h4>
+              <p>Mailchimp — Automação de campanhas</p>
+            </div>
+            <span class="integration-status inactive">
+              <span class="dot"></span> Desconectado
+            </span>
+          </div>
+          <div class="integration-card export-card">
+            <div class="integration-icon" style="background: rgba(34, 197, 94, 0.12); color: var(--green);">
+              <i class="fa-solid fa-file-excel"></i>
+            </div>
+            <div class="integration-info">
+              <h4>Exportar Dados (Excel)</h4>
+              <p>Baixe produtos, clientes, vendas e mais</p>
+            </div>
+            <div class="export-actions">
+              <button class="btn btn-sm btn-primary" onclick="exportToExcel('products')">
+                <i class="fa-solid fa-shirt"></i> Produtos
+              </button>
+              <button class="btn btn-sm btn-primary" onclick="exportToExcel('customers')">
+                <i class="fa-solid fa-users"></i> Clientes
+              </button>
+              <button class="btn btn-sm btn-primary" onclick="exportToExcel('sales')">
+                <i class="fa-solid fa-cart-shopping"></i> Vendas
+              </button>
+              <button class="btn btn-sm btn-primary" onclick="exportToExcel('categories')">
+                <i class="fa-solid fa-tags"></i> Categorias
+              </button>
+              <button class="btn btn-sm btn-primary" onclick="exportToExcel('all')">
+                <i class="fa-solid fa-database"></i> Tudo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== BOTTOM NAV (Mobile) ===== -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="#" class="bottom-nav-item active" data-section="overview">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Visão Geral</span>
+    </a>
+    <a href="#" class="bottom-nav-item" data-section="inventory">
+      <i class="fa-solid fa-boxes-stacked"></i>
+      <span>Estoque</span>
+    </a>
+    <a href="#" class="bottom-nav-item" data-section="pos">
+      <i class="fa-solid fa-cash-register"></i>
+      <span>PDV</span>
+    </a>
+    <a href="#" class="bottom-nav-item" data-section="sales">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Vendas</span>
+    </a>
+    <a href="#" class="bottom-nav-item" data-section="settings">
+      <i class="fa-solid fa-gear"></i>
+      <span>Ajustes</span>
+    </a>
+  </nav>
+
+  <!-- ===== ONBOARDING OVERLAY ===== -->
+  <div class="onboarding-overlay" id="onboardingOverlay">
+    <div class="onboarding-modal" id="onboardingModal">
+      <div class="onboarding-steps">
+        <div class="onboarding-step active" data-step="0">
+          <div class="onboarding-icon"><i class="fa-solid fa-tshirt"></i></div>
+          <h2>Bem-vindo ao Stoklytics!</h2>
+          <p>Seu ERP inteligente de moda está pronto para usar. Gerencie estoque, vendas e muito mais em um só lugar.</p>
+        </div>
+        <div class="onboarding-step" data-step="1">
+          <div class="onboarding-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <h2>Cadastre seus Produtos</h2>
+          <p>Adicione peças, defina preços, grades de tamanhos e categorias. Mantenha seu catálogo sempre organizado.</p>
+        </div>
+        <div class="onboarding-step" data-step="2">
+          <div class="onboarding-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <h2>Acompanhe suas Vendas</h2>
+          <p>Registre vendas no PDV, veja relatórios inteligentes e acompanhe o desempenho da sua equipe em tempo real.</p>
+        </div>
+      </div>
+      <div class="onboarding-dots" id="onboardingDots">
+        <span class="dot active" data-step="0"></span>
+        <span class="dot" data-step="1"></span>
+        <span class="dot" data-step="2"></span>
+      </div>
+      <div class="onboarding-footer">
+        <button class="btn btn-secondary" id="onboardingSkip">Pular</button>
+        <button class="btn btn-primary" id="onboardingNext">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Produto) ===== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="productModal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Cadastrar Novo Produto</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm" autocomplete="off">
+          <input type="hidden" id="editIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodName">Nome da Peça *</label>
+              <input type="text" id="prodName" required placeholder="Ex: Camiseta Oversized Cotton" />
+            </div>
+            <div class="form-group">
+              <label for="prodSku">Código SKU *</label>
+              <input type="text" id="prodSku" required placeholder="Ex: SKU-001" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodCategory">Categoria *</label>
+              <select id="prodCategory" required>
+                <option value="">Selecione...</option>
+                <option value="Camisetas">Camisetas</option>
+                <option value="Calças">Calças</option>
+                <option value="Vestidos">Vestidos</option>
+                <option value="Calçados">Calçados</option>
+                <option value="Jaquetas">Jaquetas</option>
+                <option value="Acessórios">Acessórios</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Grade de Tamanhos</label>
+              <div class="size-chips" id="prodSizesChips">
+                <span class="size-chip" data-size="PP">PP</span>
+                <span class="size-chip" data-size="P">P</span>
+                <span class="size-chip" data-size="M">M</span>
+                <span class="size-chip" data-size="G">G</span>
+                <span class="size-chip" data-size="GG">GG</span>
+                <span class="size-chip" data-size="XG">XG</span>
+                <span class="size-chip" data-size="XXG">XXG</span>
+              </div>
+              <input type="hidden" id="prodSizes" value="" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodQuantity">Quantidade *</label>
+              <input type="number" id="prodQuantity" required min="0" placeholder="0" />
+            </div>
+            <div class="form-group">
+              <label for="prodCostPrice">Preço de Custo (R$) *</label>
+              <input type="text" id="prodCostPrice" required inputmode="decimal" placeholder="0,00" />
+            </div>
+            <div class="form-group">
+              <label for="prodSalePrice">Preço de Venda (R$) *</label>
+              <input type="text" id="prodSalePrice" required inputmode="decimal" placeholder="0,00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Ícone / Foto</label>
+              <div class="media-toggle">
+                <button type="button" class="media-toggle-btn active" data-media="icon" id="mediaToggleIcon"><i class="fa-solid fa-icons"></i> Ícone</button>
+                <button type="button" class="media-toggle-btn" data-media="photo" id="mediaTogglePhoto"><i class="fa-solid fa-image"></i> Foto</button>
+              </div>
+              <div id="productMediaIcon">
+                <input type="hidden" id="prodIcon" value="fa-solid fa-shirt" />
+                <div class="icon-picker-grid" id="prodIconPicker"></div>
+              </div>
+              <div id="productMediaPhoto" style="display:none;">
+                <input type="file" id="prodPhoto" accept="image/*" style="font-size:0.85rem;" />
+                <div id="prodPhotoPreview" style="margin-top:8px;display:none;">
+                  <img id="prodPhotoImg" style="max-width:120px;max-height:120px;border-radius:8px;border:1px solid var(--border);object-fit:cover;" />
+                  <button type="button" id="prodPhotoRemove" class="btn btn-sm" style="margin-top:4px;background:var(--bg-card);border:1px solid var(--border);">Remover foto</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" id="priceHistoryRow" style="display:none;">
+            <div class="form-group full-width">
+              <label>Histórico de Preços</label>
+              <div class="price-history-list" id="priceHistoryList"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="modalSave">
+          <i class="fa-solid fa-check"></i> <span id="modalSaveText">Salvar Produto</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Categoria) ===== -->
+  <div class="modal-overlay" id="categoryModalOverlay">
+    <div class="modal" style="max-width: 460px;">
+      <div class="modal-header">
+        <h2 id="categoryModalTitle">Nova Categoria</h2>
+        <button class="modal-close" id="categoryModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="categoryForm" autocomplete="off">
+          <input type="hidden" id="editCategoryIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="catName">Nome da Categoria *</label>
+              <input type="text" id="catName" required placeholder="Ex: Moletons" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Ícone</label>
+              <input type="hidden" id="catIcon" value="fa-solid fa-tag" />
+              <div class="icon-picker-grid" id="catIconPicker"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="categoryModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="categoryModalSave">
+          <i class="fa-solid fa-check"></i> <span id="categoryModalSaveText">Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Usuário) ===== -->
+  <div class="modal-overlay" id="userModalOverlay">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 id="userModalTitle">Criar Usuário</h2>
+        <button class="modal-close" id="userModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="userForm" autocomplete="off">
+          <input type="hidden" id="editUserIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="userName">Nome *</label>
+              <input type="text" id="userName" required placeholder="Ex: Maria Silva" />
+            </div>
+            <div class="form-group">
+              <label for="userEmail">E-mail *</label>
+              <input type="email" id="userEmail" required placeholder="maria@loja.com" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="userPassword">Senha *</label>
+              <input type="password" id="userPassword" required placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label for="userRole">Função</label>
+              <select id="userRole">
+                <option value="Gestor">Gestor</option>
+                <option value="Vendedor">Vendedor</option>
+                <option value="Estoquista">Estoquista</option>
+                <option value="Administrador">Administrador</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="userModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="userModalSave">
+          <i class="fa-solid fa-check"></i> <span id="userModalSaveText">Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Transação Fluxo de Caixa) ===== -->
+  <div class="modal-overlay" id="cfModalOverlay">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 id="cfModalTitle">Nova Transação</h2>
+        <button class="modal-close" id="cfModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="cfForm" autocomplete="off">
+          <input type="hidden" id="editCfIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="cfDesc">Descrição *</label>
+              <input type="text" id="cfDesc" required placeholder="Ex: Pagamento de fornecedor" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cfType">Tipo *</label>
+              <select id="cfType" required>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cfValue">Valor (R$) *</label>
+              <input type="number" id="cfValue" required min="0" step="0.01" placeholder="0.00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cfCategory">Categoria *</label>
+              <select id="cfCategory" required>
+                <option value="Vendas">Vendas</option>
+                <option value="Fornecedores">Fornecedores</option>
+                <option value="Aluguel">Aluguel</option>
+                <option value="Folha">Folha</option>
+                <option value="Impostos">Impostos</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cfDate">Data</label>
+              <input type="date" id="cfDate" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cfModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="cfModalSave">
+          <i class="fa-solid fa-check"></i> <span id="cfModalSaveText">Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Cliente) ===== -->
+  <div class="modal-overlay" id="customerModalOverlay">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 id="customerModalTitle">Novo Cliente</h2>
+        <button class="modal-close" id="customerModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="customerForm" autocomplete="off">
+          <input type="hidden" id="editCustomerIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="custName">Nome *</label>
+              <input type="text" id="custName" required placeholder="Ex: Maria Silva" />
+            </div>
+            <div class="form-group">
+              <label for="custPhone">Telefone</label>
+              <input type="text" id="custPhone" placeholder="(11) 99999-0000" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="custEmail">E-mail</label>
+              <input type="email" id="custEmail" placeholder="maria@email.com" />
+            </div>
+            <div class="form-group">
+              <label for="custNotes">Observações</label>
+              <input type="text" id="custNotes" placeholder="Cliente VIP, preferência por..." />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="customerModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="customerModalSave" type="submit" form="customerForm">
+          <i class="fa-solid fa-check"></i> <span id="customerModalSaveText">Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Cupom) ===== -->
+  <div class="modal-overlay" id="couponModalOverlay">
+    <div class="modal" style="max-width: 540px;">
+      <div class="modal-header">
+        <h2 id="couponModalTitle">Novo Cupom</h2>
+        <button class="modal-close" id="couponModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="couponForm" autocomplete="off">
+          <input type="hidden" id="editCouponIndex" value="-1" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponCode">Código *</label>
+              <input type="text" id="couponCode" required placeholder="Ex: PROMO20" style="text-transform:uppercase;" />
+            </div>
+            <div class="form-group">
+              <label for="couponDiscountType">Tipo</label>
+              <select id="couponDiscountType">
+                <option value="percentage">Porcentagem (%)</option>
+                <option value="fixed">Valor Fixo (R$)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponDiscountValue">Valor do Desconto *</label>
+              <input type="number" id="couponDiscountValue" required min="0" step="0.01" placeholder="Ex: 10 (para 10%)" />
+            </div>
+            <div class="form-group">
+              <label>Restrição de Categorias</label>
+              <p class="chip-label" style="margin-bottom:2px;margin-top:2px;">Clique para selecionar (vazio = todas)</p>
+              <div id="couponCategoryRestriction" class="chip-group"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponMinQuantity">Qtd. Mínima de Itens</label>
+              <input type="number" id="couponMinQuantity" min="0" value="0" placeholder="0 = sem mínimo" />
+            </div>
+            <div class="form-group">
+              <label for="couponUsageLimit">Limite de Usos</label>
+              <input type="number" id="couponUsageLimit" min="0" value="" placeholder="0 = ilimitado" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponDescription">Descrição</label>
+              <input type="text" id="couponDescription" placeholder="Ex: Desconto especial para coleção de verão" />
+            </div>
+            <div class="form-group">
+              <label for="couponExpiresAt">Data de Expiração</label>
+              <input type="date" id="couponExpiresAt" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="couponModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="couponModalSave">
+          <i class="fa-solid fa-check"></i> <span id="couponModalSaveText">Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL (Detalhes da Venda) ===== -->
+  <div class="modal-overlay" id="saleDetailOverlay">
+    <div class="modal" style="max-width: 540px;">
+      <div class="modal-header">
+        <h2 id="saleDetailTitle">Detalhes da Venda</h2>
+        <button class="modal-close" id="saleDetailClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="saleDetailContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="saleDetailCancel">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end app-wrapper -->
+
+  <script src="db.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
