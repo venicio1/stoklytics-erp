@@ -2,11 +2,6 @@
 
 Um ERP web para lojas de moda, criado para reunir em um só lugar o controle de estoque, as vendas e a rotina da loja.
 
-<p align="center">
-  <a href="https://venicio1.github.io/stoklytics-erp/">
-    <img src="docs/preview.png" alt="Painel principal do Stoklytics" width="100%">
-  </a>
-</p>
 
 <p align="center">
   <a href="https://venicio1.github.io/stoklytics-erp/">Acessar demonstração</a>
